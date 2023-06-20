@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="向下转型时使用 instanceof 判断是否是某类的实例（保证安全）12345678910111213141516171819202122232425262728293031323334353637public class Shape &amp;#123;    void f()&amp;#123;        System.out.println(&quot;父类&quot;);    &amp;#125;&amp;#12">
+<meta property="og:type" content="website">
+<meta property="og:title" content="about">
+<meta property="og:url" content="http://example.com/about/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="向下转型时使用 instanceof 判断是否是某类的实例（保证安全）12345678910111213141516171819202122232425262728293031323334353637public class Shape &amp;#123;    void f()&amp;#123;        System.out.println(&quot;父类&quot;);    &amp;#125;&amp;#12">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/cyx27/image/main/img/java_collections_overview.png">
+<meta property="article:published_time" content="2023-06-20T15:37:38.000Z">
+<meta property="article:modified_time" content="2023-06-20T15:41:26.361Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/cyx27/image/main/img/java_collections_overview.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>about</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+    <div class="content index py4 ">
+        
+          <header id="header">
+  <a class="u-url u-uid" href="/">
+  
+    
+      <img id="logo" alt class="u-logo" src="/images/logo.png" />
+    
+  
+    <div id="title">
+      <h1 class="p-name">Hexo</h1>
+    </div>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#" aria-label="目录"><i class="fa-solid fa-bars fa-2x"></i></a>
+      </li>
+      <!--
+     --><li><a href="/">首页</a></li><!--
+   --><!--
+     --><li><a href="/about/">关于</a></li><!--
+   --><!--
+     --><li><a href="/archives/">归档</a></li><!--
+   --><!--
+     --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+   -->
+    </ul>
+  </div>
+</header>
+
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  
+
+  <div class="content" itemprop="articleBody">
+      
+          <h1 id="向下转型时使用-instanceof-判断是否是某类的实例（保证安全）"><a href="#向下转型时使用-instanceof-判断是否是某类的实例（保证安全）" class="headerlink" title="向下转型时使用 instanceof 判断是否是某类的实例（保证安全）"></a>向下转型时使用 instanceof 判断是否是某类的实例（保证安全）</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Shape</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">f</span><span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;父类&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Circle</span> <span class="keyword">extends</span> <span class="title class_">Shape</span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">f</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;circle&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Rectangle</span> <span class="keyword">extends</span> <span class="title class_">Shape</span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">f</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;rectangle&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        ArrayList&lt;Shape&gt; arrayList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        arrayList.add(<span class="keyword">new</span> <span class="title class_">Circle</span>());</span><br><span class="line">        arrayList.add(<span class="keyword">new</span> <span class="title class_">Rectangle</span>());</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> (Shape shape : arrayList) &#123;</span><br><span class="line">            <span class="keyword">if</span> (shape <span class="keyword">instanceof</span> Circle) &#123; <span class="comment">// 向下转型</span></span><br><span class="line">                <span class="type">Circle</span> <span class="variable">circle</span> <span class="operator">=</span> (Circle) shape;</span><br><span class="line">                circle.f();</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (shape <span class="keyword">instanceof</span> Rectangle) &#123;</span><br><span class="line">                <span class="type">Rectangle</span> <span class="variable">rectangle</span> <span class="operator">=</span> (Rectangle) shape;</span><br><span class="line">                rectangle.f();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="1-基础知识"><a href="#1-基础知识" class="headerlink" title="1. 基础知识"></a>1. 基础知识</h1><h2 id="1-1-不可变类"><a href="#1-1-不可变类" class="headerlink" title="1.1 不可变类"></a>1.1 不可变类</h2><p>五条基本原则：</p>
+<ol>
+<li>类中所有的成员变量被 private 所修饰</li>
+<li>类中没有写或者修改成员变量的方法，如：setXXX</li>
+<li>确保类中所有的方法不会被子类覆盖，可以通过把类定义为 final 或者类中的方法定义为 final</li>
+<li>如果一个类成员不是不可变量，那么在成员初始化或者使用get方法获取该成员变量是需要通过 <strong>clone</strong> 方法，来确保类的不可变性。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 不可变类</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ImmutableClass</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Date d;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ImmutableClass</span><span class="params">(Date d)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.d = (Date) d.clone();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(d);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Date <span class="title function_">getDate</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (Date) d.clone();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>如果有必要，可以通过覆盖Object类的equals()方法和hashCode()方法。</li>
+</ol>
+<h2 id="1-2-x3D-x3D-、equals、hashCode"><a href="#1-2-x3D-x3D-、equals、hashCode" class="headerlink" title="1.2 &#x3D;&#x3D;、equals、hashCode"></a>1.2 &#x3D;&#x3D;、equals、hashCode</h2><p>&#x3D;&#x3D;：比较两个变量的值是否相等，若是对象则比较两个对象占用内存的首地址是否相等（即两个变量是否指向同一对象）</p>
+<p>equals：Object 类提供的方法，相比于”&#x3D;&#x3D;”可重写，比较对象占用内存首地址，String 重写了 equals 方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Object类默认的equals方法，相当于&quot;==&quot;</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object obj)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (<span class="built_in">this</span> == obj);</span><br><span class="line">&#125;    </span><br><span class="line"></span><br><span class="line"><span class="comment">// String重写了equals</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object anObject)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">this</span> == anObject) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (anObject <span class="keyword">instanceof</span> String) &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">anotherString</span> <span class="operator">=</span> (String)anObject;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> value.length;</span><br><span class="line">        <span class="keyword">if</span> (n == anotherString.value.length) &#123;</span><br><span class="line">            <span class="type">char</span> v1[] = value;</span><br><span class="line">            <span class="type">char</span> v2[] = anotherString.value;</span><br><span class="line">            <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> (n-- != <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (v1[i] != v2[i])</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>hashCode：Object类中的hashCode方法返回对象在内存中地址转换成的一个int值。String类重写了hashCode()</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// String类重写了hashCode</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hashCode</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">h</span> <span class="operator">=</span> hash;</span><br><span class="line">    <span class="keyword">if</span> (h == <span class="number">0</span> &amp;&amp; value.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="type">char</span> val[] = value;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; value.length; i++) &#123;</span><br><span class="line">            h = <span class="number">31</span> * h + val[i];</span><br><span class="line">        &#125;</span><br><span class="line">        hash = h;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> h;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-3-值传递和引用传递"><a href="#1-3-值传递和引用传递" class="headerlink" title="1.3 值传递和引用传递"></a>1.3 值传递和引用传递</h2><p>基本类型传递值，即创建一个相同值的副本，并不会改变本身的值。</p>
+<p>对象传递地址的值，其实本质也是值传递（创建一个相同地址值的副本），但会通过地址的值修改该地址上的内容</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">StringBuffer</span> <span class="variable">s1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuffer</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">        f(s1);</span><br><span class="line">        System.out.println(s1);</span><br><span class="line">        System.out.println();</span><br><span class="line">        func(s1);</span><br><span class="line">        System.out.println(s1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">f</span><span class="params">(StringBuffer ss1)</span> &#123;</span><br><span class="line">        System.out.println(ss1.hashCode());</span><br><span class="line">        <span class="comment">// ss1 指向了新字符串，所以不会改变原来的 s1 地址上的值</span></span><br><span class="line">        ss1 = <span class="keyword">new</span> <span class="title class_">StringBuffer</span>(<span class="string">&quot;world&quot;</span>);</span><br><span class="line">        System.out.println(ss1.hashCode());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">func</span><span class="params">(StringBuffer ss1)</span> &#123;</span><br><span class="line">        System.out.println(ss1.hashCode());</span><br><span class="line">        <span class="comment">// ss1 仍指向原来字符串，对其修改也会对 s1 修改</span></span><br><span class="line">        ss1.append(<span class="string">&quot; world&quot;</span>);</span><br><span class="line">        System.out.println(ss1.hashCode());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">运行结果：</span><br><span class="line"><span class="number">460141958</span></span><br><span class="line"><span class="number">1163157884</span></span><br><span class="line">hello</span><br><span class="line"></span><br><span class="line"><span class="number">460141958</span></span><br><span class="line"><span class="number">460141958</span></span><br><span class="line">hello world</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-4-Java关键字"><a href="#1-4-Java关键字" class="headerlink" title="1.4 Java关键字"></a>1.4 Java关键字</h2><h3 id="static："><a href="#static：" class="headerlink" title="static："></a>static：</h3><p>变量、方法、内部类、代码块、导入包（不常用）</p>
+<h3 id="final："><a href="#final：" class="headerlink" title="final："></a>final：</h3><p>属性（引用不可变，即只能指向初始化时指向的那个对象，不关心指向对象内容的变化）、方法（不可覆盖）、类（不可被继承）</p>
+<p>final变量必须被初始化</p>
+<p><strong>为什么匿名内部类只能使用成员变量或者被 final 修饰的局部变量呢？</strong></p>
+<p><strong>因为匿名内部类的生存期可能比一般的局部变量更久。例如一个 Runnable 的实现体，有可能在数秒之后才被调用，而它的外部方法体已经随着代码执行完毕而消亡了。之前定义在外部方法体内的变量随着方法区内存的回收也一起消亡了</strong></p>
+<h3 id="transient："><a href="#transient：" class="headerlink" title="transient："></a>transient：</h3><p>Java 的 serialization 提供了一种持久化对象实例的机制。当持久化一个对象时，可能并不想持久化所有的属性。对于这种情况，可以通过在属性前加上关键字transient 来实现。</p>
+<h3 id="volatile："><a href="#volatile：" class="headerlink" title="volatile："></a>volatile：</h3><p>用于修饰会被多线程访问属性，以保持修改对所有线程可见。只保证可见性和有序性，不保证原子性。</p>
+<h1 id="2-面向对象"><a href="#2-面向对象" class="headerlink" title="2. 面向对象"></a>2. 面向对象</h1><h2 id="2-1-继承"><a href="#2-1-继承" class="headerlink" title="2.1 继承"></a>2.1 继承</h2><p>java不支持多重继承，但可以间接实现：</p>
+<ol>
+<li>实现多重接口</li>
+<li>定义多个内部类，这些内部类继承自不同的父类</li>
+</ol>
+<p>类中的方法才有多态，类中成员变量没有多态的概念。</p>
+<h2 id="2-2-反射"><a href="#2-2-反射" class="headerlink" title="2.2 反射"></a>2.2 反射</h2><p>反射机制指对于处在运行状态中的类，能够获取这个类的所有属性和方法。                                                                                                                                                                                                                                                                                                                                       </p>
+<p>主要实现了以下功能：</p>
+<ol>
+<li>获取类的访问修饰符、方法、属性以及父类信息。</li>
+<li>在运行时根据类的名字创建对象。在运行时调用任意一个对象的方法。</li>
+<li>在运行时判断一个对象属于哪个类。</li>
+<li>生成动态代理。</li>
+</ol>
+<p>获取Class对象的三种方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    Class&lt;?&gt; c1 = A.class;</span><br><span class="line">    Class&lt;?&gt; c2 = Class.forName(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">    <span class="type">A</span> <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">A</span>();</span><br><span class="line">    Class&lt;?&gt; c3 = a.getClass();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过反射机制修改只读对象的成员变量值：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ReadOnlyClass</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">Integer</span> <span class="variable">age</span> <span class="operator">=</span> <span class="number">20</span>;</span><br><span class="line">    <span class="keyword">public</span> Integer <span class="title function_">getAge</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">        <span class="type">ReadOnlyClass</span> <span class="variable">pt</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReadOnlyClass</span>();</span><br><span class="line">        System.out.println(pt.getAge());</span><br><span class="line">        Class&lt;?&gt; clazz = ReadOnlyClass.class;</span><br><span class="line">        <span class="type">Field</span> <span class="variable">field</span> <span class="operator">=</span> clazz.getDeclaredField(<span class="string">&quot;age&quot;</span>);</span><br><span class="line">        field.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        field.set(pt, <span class="number">30</span>);</span><br><span class="line">        System.out.println(pt.getAge());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">运行结果：</span><br><span class="line"><span class="number">20</span></span><br><span class="line"><span class="number">30</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-3-嵌套类"><a href="#2-3-嵌套类" class="headerlink" title="2.3 嵌套类"></a>2.3 嵌套类</h2><p>主要有四种：</p>
+<h3 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">outerClass</span> &#123;</span><br><span class="line">	<span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">innerClass</span>&#123;&#125;; <span class="comment">// 静态内部类</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="成员内部类（普通内部类）"><a href="#成员内部类（普通内部类）" class="headerlink" title="成员内部类（普通内部类）"></a>成员内部类（普通内部类）</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">outerClass</span> &#123;</span><br><span class="line">	<span class="keyword">class</span> <span class="title class_">innerClass</span>&#123;&#125;; <span class="comment">// 成员内部类（普通内部类）</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="局部内部类"><a href="#局部内部类" class="headerlink" title="局部内部类"></a>局部内部类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">outerClass</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">memberFunction</span><span class="params">()</span> &#123;   </span><br><span class="line">		<span class="keyword">class</span> <span class="title class_">innerClass</span>&#123;&#125;; <span class="comment">// 局部内部类</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="匿名内部类"><a href="#匿名内部类" class="headerlink" title="匿名内部类"></a>匿名内部类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyFrame</span> <span class="keyword">extends</span> <span class="title class_">Frame</span> &#123;</span><br><span class="line">    <span class="comment">// 外部类</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MyFrame</span><span class="params">()</span> &#123;</span><br><span class="line">        addWindowListener(<span class="keyword">new</span> <span class="title class_">WindowAdapter</span>()&#123;</span><br><span class="line">            <span class="comment">// 匿名内部类</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">windowClosing</span><span class="params">(WindowEvent e)</span> &#123;</span><br><span class="line">                dispose();</span><br><span class="line">                System.exit(<span class="number">0</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-泛型"><a href="#3-泛型" class="headerlink" title="3. 泛型"></a>3. 泛型</h1><h2 id="3-1-基本概念"><a href="#3-1-基本概念" class="headerlink" title="3.1 基本概念"></a>3.1 基本概念</h2><p>分类：泛型接口、泛型类、泛型方法</p>
+<p>若类 A 是类 B 的子类，则记作 A &lt;&#x3D; B。设有变换 f()，则有以下定律：</p>
+<ul>
+<li>当 A &lt;&#x3D; B 时，有 f(A) &lt;&#x3D; f(B)，则称变换 f() 具有协变性。</li>
+<li>当 A &lt;&#x3D; B 时，有 f(A) &gt;&#x3D; f(B)，则称变换 f() 具有逆变性。</li>
+<li>若都不成立，则称变换 f() 具有无关性。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 编译正确</span></span><br><span class="line">Object[] array = <span class="keyword">new</span> <span class="title class_">String</span>[<span class="number">10</span>];</span><br><span class="line"><span class="comment">// 编译错误</span></span><br><span class="line">ArrayList&lt; Object&gt; list1 = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;String&gt;();</span><br><span class="line"><span class="comment">// 编译正确，使用了无关泛型</span></span><br><span class="line">ArrayList&lt;? <span class="keyword">extends</span> <span class="title class_">Object</span>&gt; list2 = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;String&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>数组和泛型不能混用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 泛型的无关性</span></span><br><span class="line">List&lt;Object&gt; list1 = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;Object&gt;();</span><br><span class="line">list1.add(<span class="keyword">new</span> <span class="title class_">Object</span>();</span><br><span class="line">List&lt;Integer&gt; list2 = list1; <span class="comment">// 编译错误(List&lt;Object&gt; 转为 List&lt;Integer&gt; 失败)</span></span><br><span class="line">ArrayList&lt;Integer&gt; list3 = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;Integer&gt;();</span><br><span class="line">list3.add(<span class="number">1</span>);</span><br><span class="line">ArrayList&lt;Object&gt; list4 = list3; <span class="comment">// 编译错误(List&lt;Integer&gt; 转为 List&lt;Object&gt; 失败)</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-泛型擦除"><a href="#3-2-泛型擦除" class="headerlink" title="3.2 泛型擦除"></a>3.2 泛型擦除</h2><p>主流编程语言的泛型有两种处理方法</p>
+<ul>
+<li>Code specialization</li>
+</ul>
+<p>每当实例化一个泛型类的时候都会产生一份新的字节代码。C++ 的 template。导致代码膨胀（code bloat），浪费空间</p>
+<ul>
+<li>Code Sharing</li>
+</ul>
+<p>对每个泛型类只生成唯一的一份目标代码，所有泛型的实例会被映射到这份目标代码上。Java 的引用。</p>
+<p><strong>泛型擦除</strong>（类型擦除）是指在编译器处理带泛型定义的类、接口或方法时，会在字节码指令集里抹去全部泛型类型信息，泛型被擦除后在字节码里只保留泛型的<strong>原始类型</strong>。泛型擦除的关键在于从泛型类型中清除类型参数的相关信息，然后在必要的时候添加类型检查和类型转换的方法。</p>
+<p>原始类型的示例：<T>中 T 对应的原始泛型是 Object， <T extends String> 对应的原始类型是 String 。	</p>
+<h1 id="4-Java-新特性"><a href="#4-Java-新特性" class="headerlink" title="4. Java 新特性"></a>4. Java 新特性</h1><h2 id="4-1-Java8-新特性"><a href="#4-1-Java8-新特性" class="headerlink" title="4.1 Java8 新特性"></a>4.1 Java8 新特性</h2><h3 id="4-1-1-lambda-表达式"><a href="#4-1-1-lambda-表达式" class="headerlink" title="4.1.1 lambda 表达式"></a>4.1.1 lambda 表达式</h3><h3 id="4-1-2-接口使用-default-添加方法的默认实现，使用-static-添加静态方法"><a href="#4-1-2-接口使用-default-添加方法的默认实现，使用-static-添加静态方法" class="headerlink" title="4.1.2 接口使用 default 添加方法的默认实现，使用 static 添加静态方法"></a>4.1.2 接口使用 default 添加方法的默认实现，使用 static 添加静态方法</h3><h3 id="4-1-3-方法引用"><a href="#4-1-3-方法引用" class="headerlink" title="4.1.3 方法引用"></a>4.1.3 方法引用</h3><p>可以直接引用 Java 类或对象的方法。</p>
+<p>有4种形式：</p>
+<ul>
+<li>引用构造方法：ClassName::new</li>
+<li>引用类静态方法：ClassName::methodName</li>
+<li>引用特定类的任意对象方法：ClassName::methodName</li>
+<li>引用某个对象的方法：instanceName::methodName</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Arrays.sort(people, Comparator.comparing(Persion::getAge));</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-1-4-注解（Annotation）"><a href="#4-1-4-注解（Annotation）" class="headerlink" title="4.1.4 注解（Annotation）"></a>4.1.4 注解（Annotation）</h3><h3 id="4-1-5-类型推测"><a href="#4-1-5-类型推测" class="headerlink" title="4.1.5 类型推测"></a>4.1.5 类型推测</h3><p>没看明白</p>
+<h3 id="4-1-6-参数名字"><a href="#4-1-6-参数名字" class="headerlink" title="4.1.6 参数名字"></a>4.1.6 参数名字</h3><p>感觉不重要</p>
+<h3 id="4-1-7-新增-Optional-类处理空指针"><a href="#4-1-7-新增-Optional-类处理空指针" class="headerlink" title="4.1.7 新增 Optional 类处理空指针"></a>4.1.7 新增 Optional 类处理空指针</h3><h3 id="4-1-8-新增-Stream-类配合-lambda-使用"><a href="#4-1-8-新增-Stream-类配合-lambda-使用" class="headerlink" title="4.1.8 新增 Stream 类配合 lambda 使用"></a>4.1.8 新增 Stream 类配合 lambda 使用</h3><h3 id="4-1-9-日期新特性"><a href="#4-1-9-日期新特性" class="headerlink" title="4.1.9 日期新特性"></a>4.1.9 日期新特性</h3><h3 id="4-1-10-调用-JavaScript-代码"><a href="#4-1-10-调用-JavaScript-代码" class="headerlink" title="4.1.10 调用 JavaScript 代码"></a>4.1.10 调用 JavaScript 代码</h3><h3 id="4-1-11-Base64"><a href="#4-1-11-Base64" class="headerlink" title="4.1.11 Base64"></a>4.1.11 Base64</h3><h3 id="4-1-12-并行数组"><a href="#4-1-12-并行数组" class="headerlink" title="4.1.12 并行数组"></a>4.1.12 并行数组</h3><p>可以将数组转换，从而使用 lambda 功能。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">int</span>[] arr = &#123;<span class="number">1</span>,<span class="number">5</span>,<span class="number">8</span>,<span class="number">3</span>,<span class="number">15</span>,<span class="number">50</span>,<span class="number">16</span>&#125;;</span><br><span class="line">    Arrays.parallelSort(arr);</span><br><span class="line">    Arrays.stream(arr).forEach(i -&gt; System.out.print(i + <span class="string">&quot; &quot;</span>));</span><br><span class="line">    System.out.println();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-2-Java9-新特性"><a href="#4-2-Java9-新特性" class="headerlink" title="4.2 Java9 新特性"></a>4.2 Java9 新特性</h2><p>还没看。</p>
+<h1 id="5-Collection-框架"><a href="#5-Collection-框架" class="headerlink" title="5. Collection 框架"></a>5. Collection 框架</h1><p><img src="https://raw.githubusercontent.com/cyx27/image/main/img/java_collections_overview.png" alt="img"></p>
+<h2 id="5-1-List"><a href="#5-1-List" class="headerlink" title="5.1 List"></a>5.1 List</h2><h3 id="5-1-1-ArrayList"><a href="#5-1-1-ArrayList" class="headerlink" title="5.1.1 ArrayList"></a>5.1.1 ArrayList</h3><p>用数组实现</p>
+<h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><ul>
+<li>随机访问效率高</li>
+<li>读快写慢，因为写的过程涉及到元素的移动，所以较慢</li>
+</ul>
+<p>随机访问和顺序访问：</p>
+<ul>
+<li>随机访问又称直接访问，在一组长度为 n 的数据中，要找到第 i 个元素，只需要通过下标 i 就可以访问。</li>
+<li>顺序访问需要从头或尾开始遍历，直至找到第 i 个元素</li>
+</ul>
+<h4 id="父类和接口"><a href="#父类和接口" class="headerlink" title="父类和接口"></a>父类和接口</h4><ul>
+<li>java.util.AbstractList</li>
+</ul>
+<p>大部分 List 的共同父类</p>
+<ul>
+<li>java.util.List</li>
+</ul>
+<p>列表标准接口</p>
+<ul>
+<li>java.util.RandomAccess</li>
+</ul>
+<p>实现该接口的类使用索引遍历比迭代器快</p>
+<ul>
+<li>java.lang.Cloneable</li>
+</ul>
+<p>可克隆</p>
+<ul>
+<li>java.io.Serializable</li>
+</ul>
+<p>序列化</p>
+<h4 id="成员变量和常量"><a href="#成员变量和常量" class="headerlink" title="成员变量和常量"></a>成员变量和常量</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 成员变量</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> Object[] elementData;</span><br><span class="line"><span class="keyword">private</span> <span class="type">int</span> size; <span class="comment">// 当前 List 的长度，≤ elementData 的长度</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">transient</span> <span class="type">int</span> <span class="variable">modCount</span> <span class="operator">=</span> <span class="number">0</span>; <span class="comment">// 记录 arraylist 结构性变化的次数，包括 add(), remove(), addAll(), removeRange(), clear()</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 常量</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> <span class="number">8683452581122892189L</span>; <span class="comment">// 序列化版本 UID</span></span><br><span class="line">.....</span><br></pre></td></tr></table></figure>
+
+<h4 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">ArrayList</span><span class="params">(<span class="type">int</span> initialCapacity)</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="title function_">ArrayList</span><span class="params">()</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="title function_">ArrayList</span><span class="params">(Collection&lt;? extends E&gt; c)</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="主要方法"><a href="#主要方法" class="headerlink" title="主要方法"></a>主要方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">indexOf</span><span class="params">(Object o)</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">lastIndexOf</span><span class="params">(Object o)</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">contains</span><span class="params">(Object o)</span>;</span><br><span class="line"><span class="keyword">public</span> E <span class="title function_">get</span><span class="params">(<span class="type">int</span> index)</span>;</span><br><span class="line"><span class="keyword">public</span> E <span class="title function_">set</span><span class="params">(<span class="type">int</span> index, E element)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 下面方法会检查 elementData 的长度并修正，关键方法为 grow();</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">add</span><span class="params">(E e)</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span> index, E element)</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">addAll</span><span class="params">(Collection&lt;? extends E&gt; c)</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">addAll</span><span class="params">(<span class="type">int</span> index, Collection&lt;? extends E&gt; c)</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">grow</span><span class="params">(<span class="type">int</span> minCapacity)</span> &#123;</span><br><span class="line">        <span class="comment">// overflow-conscious code</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">oldCapacity</span> <span class="operator">=</span> elementData.length;</span><br><span class="line">        <span class="type">int</span> <span class="variable">newCapacity</span> <span class="operator">=</span> oldCapacity + (oldCapacity &gt;&gt; <span class="number">1</span>); <span class="comment">// 新容量为旧容量的1.5倍</span></span><br><span class="line">        <span class="keyword">if</span> (newCapacity - minCapacity &lt; <span class="number">0</span>)</span><br><span class="line">            newCapacity = minCapacity;</span><br><span class="line">        <span class="keyword">if</span> (newCapacity - MAX_ARRAY_SIZE &gt; <span class="number">0</span>)</span><br><span class="line">            newCapacity = hugeCapacity(minCapacity);</span><br><span class="line">        <span class="comment">// minCapacity is usually close to size, so this is a win:</span></span><br><span class="line">        elementData = Arrays.copyOf(elementData, newCapacity);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 每次删除都要把后面的往前移，效率较低</span></span><br><span class="line"><span class="keyword">public</span> E <span class="title function_">remove</span><span class="params">(<span class="type">int</span> index)</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">remove</span><span class="params">(Object o)</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">removeAll</span><span class="params">(Collection&lt;?&gt; c)</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">retainAll</span><span class="params">(Collection&lt;?&gt; c)</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-1-2-LinkedList"><a href="#5-1-2-LinkedList" class="headerlink" title="5.1.2 LinkedList"></a>5.1.2 LinkedList</h3><p>用双向队列实现</p>
+<h4 id="特点-1"><a href="#特点-1" class="headerlink" title="特点"></a>特点</h4><ul>
+<li>顺序访问</li>
+<li>写快读慢</li>
+</ul>
+<h4 id="父类接口"><a href="#父类接口" class="headerlink" title="父类接口"></a>父类接口</h4><ul>
+<li>java.util.AbstractSequentialList</li>
+</ul>
+<p>该抽象类继承于 java.util.AbstactList，提供了顺序访问存储结构</p>
+<ul>
+<li>java.util.Deque</li>
+</ul>
+<p>双向队列</p>
+<ul>
+<li>java.lang.Cloneable</li>
+<li>java.util.List</li>
+<li>java.lang.Serialiable</li>
+</ul>
+<h4 id="成员变量和常量-1"><a href="#成员变量和常量-1" class="headerlink" title="成员变量和常量"></a>成员变量和常量</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">transient</span> <span class="type">int</span> <span class="variable">size</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Pointer to first node.</span></span><br><span class="line"><span class="comment"> * Invariant: (first == null &amp;&amp; last == null) ||</span></span><br><span class="line"><span class="comment"> *            (f	irst.prev == null &amp;&amp; first.item != null)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">transient</span> Node&lt;E&gt; first;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Pointer to last node.</span></span><br><span class="line"><span class="comment"> * Invariant: (first == null &amp;&amp; last == null) ||</span></span><br><span class="line"><span class="comment"> *            (last.next == null &amp;&amp; last.item != null)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">transient</span> Node&lt;E&gt; last;</span><br></pre></td></tr></table></figure>
+
+<h4 id="构造方法-1"><a href="#构造方法-1" class="headerlink" title="构造方法"></a>构造方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">LinkedList</span><span class="params">()</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="title function_">LinkedList</span><span class="params">(Collection&lt;? extends E&gt; c)</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="主要方法-1"><a href="#主要方法-1" class="headerlink" title="主要方法"></a>主要方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> E <span class="title function_">getFirst</span><span class="params">()</span>;</span><br><span class="line"><span class="keyword">public</span> E <span class="title function_">getLast</span><span class="params">()</span>;</span><br><span class="line"><span class="keyword">public</span> E <span class="title function_">removeFirst</span><span class="params">()</span>;</span><br><span class="line"><span class="keyword">public</span> E <span class="title function_">removeLast</span><span class="params">()</span>;</span><br><span class="line"><span class="keyword">public</span> E <span class="title function_">get</span><span class="params">(<span class="type">int</span> index)</span>;</span><br><span class="line"><span class="keyword">public</span> E <span class="title function_">set</span><span class="params">(<span class="type">int</span> index, E element)</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span> index, E element)</span>;</span><br><span class="line"><span class="keyword">public</span> E <span class="title function_">remove</span><span class="params">(<span class="type">int</span> index)</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-1-3-Vector-和-Stack"><a href="#5-1-3-Vector-和-Stack" class="headerlink" title="5.1.3 Vector 和 Stack"></a>5.1.3 Vector 和 Stack</h3><p>vector 实现和 arraylist 类似，区别为：</p>
+<ul>
+<li>Vector 线程安全，因为所有 public 方法都使用了 synchronized 关键字</li>
+<li>Vector 多了一个 capacityIncrement 成员变量，标明扩容的增量，而 ArrayList 固定扩容50%</li>
+</ul>
+<p>stack 主要方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">E <span class="title function_">push</span><span class="params">(E)</span>;</span><br><span class="line">E <span class="title function_">pop</span><span class="params">()</span>;</span><br><span class="line">E <span class="title function_">peek</span><span class="params">()</span>;</span><br><span class="line">empty();</span><br><span class="line">search(E); <span class="comment">// 查找元素的栈深，栈顶元素的深度为1，算法为 size() - lastIndexOf(E)</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="5-2-Queue"><a href="#5-2-Queue" class="headerlink" title="5.2 Queue"></a>5.2 Queue</h2><h3 id="5-2-1-PriorityQueue"><a href="#5-2-1-PriorityQueue" class="headerlink" title="5.2.1 PriorityQueue"></a>5.2.1 PriorityQueue</h3><h4 id="成员变量"><a href="#成员变量" class="headerlink" title="成员变量"></a>成员变量</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">transient</span> Object[] queue;</span><br><span class="line"><span class="keyword">private</span> <span class="type">int</span> <span class="variable">size</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Comparator&lt;? <span class="built_in">super</span> E&gt; comparator;</span><br></pre></td></tr></table></figure>
+
+<h4 id="主要方法-2"><a href="#主要方法-2" class="headerlink" title="主要方法"></a>主要方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">heapify</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> (size &gt;&gt;&gt; <span class="number">1</span>) - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--)</span><br><span class="line">        siftDown(i, (E) queue[i]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">siftDownUsingComparator</span><span class="params">(<span class="type">int</span> k, E x)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">half</span> <span class="operator">=</span> size &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (k &lt; half) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">child</span> <span class="operator">=</span> (k &lt;&lt; <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">            <span class="type">Object</span> <span class="variable">c</span> <span class="operator">=</span> queue[child];</span><br><span class="line">            <span class="type">int</span> <span class="variable">right</span> <span class="operator">=</span> child + <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (right &lt; size &amp;&amp;</span><br><span class="line">                comparator.compare((E) c, (E) queue[right]) &gt; <span class="number">0</span>)</span><br><span class="line">                c = queue[child = right];</span><br><span class="line">            <span class="keyword">if</span> (comparator.compare(x, (E) c) &lt;= <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            queue[k] = c;</span><br><span class="line">            k = child;</span><br><span class="line">        &#125;</span><br><span class="line">        queue[k] = x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">offer</span><span class="params">(E e)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (e == <span class="literal">null</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NullPointerException</span>();</span><br><span class="line">        modCount++;</span><br><span class="line">        <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> size;</span><br><span class="line">        <span class="keyword">if</span> (i &gt;= queue.length)</span><br><span class="line">            grow(i + <span class="number">1</span>);</span><br><span class="line">        size = i + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (i == <span class="number">0</span>)</span><br><span class="line">            queue[<span class="number">0</span>] = e;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            siftUp(i, e); <span class="comment">// 上浮结点</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">grow</span><span class="params">(<span class="type">int</span> minCapacity)</span>; <span class="comment">// 扩容</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取队头，将队尾值存入队头后进行沉降</span></span><br><span class="line"><span class="keyword">public</span> E <span class="title function_">poll</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (size == <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">s</span> <span class="operator">=</span> --size;</span><br><span class="line">        modCount++;</span><br><span class="line">        <span class="type">E</span> <span class="variable">result</span> <span class="operator">=</span> (E) queue[<span class="number">0</span>];</span><br><span class="line">        <span class="type">E</span> <span class="variable">x</span> <span class="operator">=</span> (E) queue[s];</span><br><span class="line">        queue[s] = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (s != <span class="number">0</span>)</span><br><span class="line">            siftDown(<span class="number">0</span>, x);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-3-Map"><a href="#5-3-Map" class="headerlink" title="5.3 Map"></a>5.3 Map</h2><p>当且仅当 hashCode 一致，且 equals 比对一致的对象，才会被 HashMap 认为是同一个对象（key 重复）。</p>
+<h3 id="5-3-1-Java8-之前的-HashMap"><a href="#5-3-1-Java8-之前的-HashMap" class="headerlink" title="5.3.1 Java8 之前的 HashMap"></a>5.3.1 Java8 之前的 HashMap</h3><p>没看</p>
+<h3 id="5-3-2-Java8-提供的-HashMap"><a href="#5-3-2-Java8-提供的-HashMap" class="headerlink" title="5.3.2 Java8 提供的 HashMap"></a>5.3.2 Java8 提供的 HashMap</h3><p>用数组+树+链表实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">transient</span> Node&lt;K,V&gt;[] table;</span><br></pre></td></tr></table></figure>
+
+<h4 id="put-K-V-方法详解"><a href="#put-K-V-方法详解" class="headerlink" title="put(K, V) 方法详解"></a>put(K, V) 方法详解</h4><p>主题流程</p>
+<ol>
+<li>获取 key 值的 hashCode</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">hash</span><span class="params">(Object key)</span> &#123;</span><br><span class="line">    <span class="type">int</span> h;</span><br><span class="line">    <span class="keyword">return</span> (key == <span class="literal">null</span>) ? <span class="number">0</span> : (h = key.hashCode()) ^ (h &gt;&gt;&gt; <span class="number">16</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>调用 putVal 方法进行存值</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> V <span class="title function_">putVal</span><span class="params">(<span class="type">int</span> hash, K key, V value, <span class="type">boolean</span> onlyIfAbsent, <span class="type">boolean</span> evict)</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>计算下标，下标 &#x3D; table 的长度 - 1 &amp; hash</li>
+<li>当 table 为空，或者数据数量（size）超过扩容阈值（threshold）的时候，重新计算 table 长度</li>
+<li>保存数据<ul>
+<li>当下标位置没有结点时，直接增加一个链表结点</li>
+<li>当下标位置结点为树结点时，增加一个树结点</li>
+<li>当前面情况都不满足时，则说明当前下标位置有结点，且为链表结点，此时遍历链表，根据 hash 和 key 值判断是否重复，以决定是替代某个结点还是新增结点</li>
+<li>在添加链表结点后，如果链表深度打到或超过建树阈值（TREEIFY_THRESHOLD-1）（8 - 1 &#x3D; 7），那么调用 treeifyBin 方法把整个链表重构为树。（链表查找是O(n)，红黑树查找是O(log2n)，因此选取7为合适的阈值。）</li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li>resize 方法重新规划 table 长度和阈值</li>
+</ol>
+<h5 id="红黑树的概念"><a href="#红黑树的概念" class="headerlink" title="红黑树的概念"></a>红黑树的概念</h5><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/mz474920631/article/details/124982316">https://blog.csdn.net/mz474920631/article/details/124982316</a></p>
+<p><strong>红黑树</strong>，是一种<strong>二叉搜索树</strong>，但在<strong>每个结点上增加一个存储位表示结点的颜色</strong>，<strong>可以是Red或Black</strong>。 通过<strong>任何一条从根到叶子的路径上各个结点着色方式的限制，红黑树确保没有一条路径会比其他路径长出俩倍</strong>，因而是<strong>接近平衡</strong>的。</p>
+<h5 id="红黑树的性质"><a href="#红黑树的性质" class="headerlink" title="红黑树的性质"></a>红黑树的性质</h5><ol>
+<li>每个结点不是红色就是黑色</li>
+<li>根节点是黑色的</li>
+<li>如果一个节点是红色的，则它的两个孩子结点是黑色的</li>
+<li>对于每个结点，从该结点到其所有后代叶结点的简单路径上，均包含相同数目的黑色结点</li>
+<li>每个叶子结点都是黑色的(此处的叶子结点指的是空结点)</li>
+</ol>
+<p>……</p>
+<h3 id="5-3-3-TreeMap"><a href="#5-3-3-TreeMap" class="headerlink" title="5.3.3 TreeMap"></a>5.3.3 TreeMap</h3><p>完全由红黑树实现</p>
+<h3 id="5-3-4-LinkedHashMap"><a href="#5-3-4-LinkedHashMap" class="headerlink" title="5.3.4 LinkedHashMap"></a>5.3.4 LinkedHashMap</h3><p>数组+环装链表+红黑树</p>
+<h3 id="5-3-5-Hashtable"><a href="#5-3-5-Hashtable" class="headerlink" title="5.3.5 Hashtable"></a>5.3.5 Hashtable</h3><p>和 HashMap 很类似</p>
+<p>Hashtable 的实现方式被 synchronized 修饰，线程安全，HashMap 线程不安全</p>
+<p>Hashtable 不能存放 null 作为 key 值，HashMap 会把 null key 存在下标0位置</p>
+<h3 id="5-3-6-WeakHashMap"><a href="#5-3-6-WeakHashMap" class="headerlink" title="5.3.6 WeakHashMap"></a>5.3.6 WeakHashMap</h3><p>弱引用的 HashMap </p>
+<h2 id="5-4-Set"><a href="#5-4-Set" class="headerlink" title="5.4 Set"></a>5.4 Set</h2><h3 id="5-4-1-HashSet"><a href="#5-4-1-HashSet" class="headerlink" title="5.4.1 HashSet"></a>5.4.1 HashSet</h3><p>只能有一个 null</p>
+<p>内部由 HashMap 实现，由于只关心 key，因此所有的 key 都会使用相同的 static value，这样能被所有对象共用，节约空间</p>
+<h4 id="特点-2"><a href="#特点-2" class="headerlink" title="特点"></a>特点</h4><ul>
+<li>线程不安全</li>
+<li>不会维护数据插入的顺序，LinkedHashSet 会</li>
+<li>不会对数据进行排序，TreeSet 会</li>
+</ul>
+<h3 id="5-4-2-LinkedHashSet"><a href="#5-4-2-LinkedHashSet" class="headerlink" title="5.4.2 LinkedHashSet"></a>5.4.2 LinkedHashSet</h3><p>内部通过 LinkedHashMap 实现</p>
+<h3 id="5-4-3-TreeSet"><a href="#5-4-3-TreeSet" class="headerlink" title="5.4.3 TreeSet"></a>5.4.3 TreeSet</h3><p>有序</p>
+
+        
+  </div>
+</article>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2023
+    John Doe
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
