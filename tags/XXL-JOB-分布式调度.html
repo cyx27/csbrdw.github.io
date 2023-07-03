@@ -7,9 +7,9 @@
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
     <meta name="description" content="一、概述在平时的业务场景中，经常有一些场景需要使用定时任务，比如：  时间驱动的场景：某个时间点发送优惠券，发送短信等等。 批量处理数据：批量统计上个月的账单，统计上个月销售数据等等。 固定频率的场景：每隔5分钟需要执行一次。  所以定时任务在平时开发中并不少见，而且对于现在快速消费的时代，每天都需要发送各种推送，消息都需要依赖定时任务去完成，应用非常广泛。 二、为什么需要任务调度平台在Java中">
-<meta property="og:type" content="article">
+<meta property="og:type" content="website">
 <meta property="og:title" content="XXL-JOB 分布式调度">
-<meta property="og:url" content="https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/index.html">
+<meta property="og:url" content="https://csbrdw.love/tags/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6.html">
 <meta property="og:site_name" content="csbrdw">
 <meta property="og:description" content="一、概述在平时的业务场景中，经常有一些场景需要使用定时任务，比如：  时间驱动的场景：某个时间点发送优惠券，发送短信等等。 批量处理数据：批量统计上个月的账单，统计上个月销售数据等等。 固定频率的场景：每隔5分钟需要执行一次。  所以定时任务在平时开发中并不少见，而且对于现在快速消费的时代，每天都需要发送各种推送，消息都需要依赖定时任务去完成，应用非常广泛。 二、为什么需要任务调度平台在Java中">
 <meta property="og:locale" content="zh_CN">
@@ -81,111 +81,48 @@
 
 <body class="max-width mx-auto px3 ltr">
     
-      <div id="header-post">
-  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-        <!--
-       --><li><a href="/">首页</a></li><!--
-     --><!--
-       --><li><a href="/about/">关于</a></li><!--
-     --><!--
-       --><li><a href="/search/">搜索</a></li><!--
-     --><!--
-       --><li><a href="/archives/">归档</a></li><!--
-     --><!--
-       --><li><a href="/tags/">标签</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="http://github.com/cyx27">项目</a></li><!--
-     -->
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" aria-label="上一篇" href="/2023/07/03/git/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" aria-label="下一篇" href="/2023/06/30/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F-%E5%85%A8%E5%B1%80%E5%94%AF%E4%B8%80ID%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%A1%88/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">上一篇</span>
-      <span id="i-next" class="info" style="display:none;">下一篇</span>
-      <span id="i-top" class="info" style="display:none;">返回顶部</span>
-      <span id="i-share" class="info" style="display:none;">分享文章</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&text=XXL-JOB 分布式调度"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&is_video=false&description=XXL-JOB 分布式调度"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=XXL-JOB 分布式调度&body=Check out this article: https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&name=XXL-JOB 分布式调度&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&t=XXL-JOB 分布式调度"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    
-    
-      <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">一、概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E5%B9%B3%E5%8F%B0"><span class="toc-number">2.</span> <span class="toc-text">二、为什么需要任务调度平台</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E6%8B%A9XXL-JOB"><span class="toc-number">3.</span> <span class="toc-text">三、为什么选择XXL-JOB</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%AE%89%E8%A3%85"><span class="toc-number">4.</span> <span class="toc-text">四、安装</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-%E6%8B%89%E5%8F%96%E6%BA%90%E7%A0%81"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 拉取源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-%E5%AF%BC%E5%85%A5IDEA"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 导入IDEA</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-%E5%88%9D%E5%A7%8B%E5%8C%96%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">4.3.</span> <span class="toc-text">4.3 初始化数据库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">4.4.</span> <span class="toc-text">4.4 配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5-%E7%BC%96%E8%AF%91%E8%BF%90%E8%A1%8C"><span class="toc-number">4.5.</span> <span class="toc-text">4.5 编译运行</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%B0%B8%E8%BF%9C%E7%9A%84HelloWord"><span class="toc-number">5.</span> <span class="toc-text">五、永远的HelloWord</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E8%B0%88%E8%B0%88%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">6.</span> <span class="toc-text">六、谈谈架构设计</span></a></li></ol>
-      </div>
-    
-  </span>
-</div>
-
-    
     <div class="content index py4 ">
         
-        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
+          <header id="header">
+  <a class="u-url u-uid" href="/">
+  
     
-    <h1 class="posttitle p-name" itemprop="name headline">
-        XXL-JOB 分布式调度
-    </h1>
+      <img id="logo" alt class="u-logo" src="/images/logo.png" />
+    
+  
+    <div id="title">
+      <h1 class="p-name">csbrdw</h1>
+    </div>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#" aria-label="目录"><i class="fa-solid fa-bars fa-2x"></i></a>
+      </li>
+      <!--
+     --><li><a href="/">首页</a></li><!--
+   --><!--
+     --><li><a href="/about/">关于</a></li><!--
+   --><!--
+     --><li><a href="/search/">搜索</a></li><!--
+   --><!--
+     --><li><a href="/archives/">归档</a></li><!--
+   --><!--
+     --><li><a href="/tags/">标签</a></li><!--
+   --><!--
+     --><li><a target="_blank" rel="noopener" href="http://github.com/cyx27">项目</a></li><!--
+   -->
+    </ul>
+  </div>
+</header>
 
-
-
-    <div class="meta">
-      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span class="p-name" itemprop="name">csbrdw</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2023-06-30T14:12:24.000Z" class="dt-published" itemprop="datePublished">2023-06-30</time>
         
-      
-    </div>
-
-
-      
-
-      
-    <div class="article-tag">
-        <i class="fa-solid fa-tag"></i>
-        <a class="p-category" href="/tags/learning/" rel="tag">learning</a>
-    </div>
-
-
-    </div>
-  </header>
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
   
 
-  <div class="content e-content" itemprop="articleBody">
-    <h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>在平时的业务场景中，经常有一些场景需要使用定时任务，比如：</p>
+  <div class="content" itemprop="articleBody">
+      
+          <h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>在平时的业务场景中，经常有一些场景需要使用定时任务，比如：</p>
 <ul>
 <li>时间驱动的场景：某个时间点发送优惠券，发送短信等等。</li>
 <li>批量处理数据：批量统计上个月的账单，统计上个月销售数据等等。</li>
@@ -256,68 +193,9 @@
 <p>原文链接：<a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/775305">https://developer.aliyun.com/article/775305</a></p>
 <p>Github 地址：<a target="_blank" rel="noopener" href="https://github.com/yehongzhi/learningSummary?spm=a2c6h.12873639.article-detail.4.6fdf7e4btfCyVA">https://github.com/yehongzhi/learningSummary</a></p>
 
+        
   </div>
 </article>
-
-
-
-        
-          <div id="footer-post-container">
-  <div id="footer-post">
-
-    <div id="nav-footer" style="display: none">
-      <ul>
-        
-          <li><a href="/">首页</a></li>
-        
-          <li><a href="/about/">关于</a></li>
-        
-          <li><a href="/search/">搜索</a></li>
-        
-          <li><a href="/archives/">归档</a></li>
-        
-          <li><a href="/tags/">标签</a></li>
-        
-          <li><a target="_blank" rel="noopener" href="http://github.com/cyx27">项目</a></li>
-        
-      </ul>
-    </div>
-
-    
-    
-      <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">一、概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E5%B9%B3%E5%8F%B0"><span class="toc-number">2.</span> <span class="toc-text">二、为什么需要任务调度平台</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E6%8B%A9XXL-JOB"><span class="toc-number">3.</span> <span class="toc-text">三、为什么选择XXL-JOB</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%AE%89%E8%A3%85"><span class="toc-number">4.</span> <span class="toc-text">四、安装</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-%E6%8B%89%E5%8F%96%E6%BA%90%E7%A0%81"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 拉取源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-%E5%AF%BC%E5%85%A5IDEA"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 导入IDEA</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-%E5%88%9D%E5%A7%8B%E5%8C%96%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">4.3.</span> <span class="toc-text">4.3 初始化数据库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">4.4.</span> <span class="toc-text">4.4 配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5-%E7%BC%96%E8%AF%91%E8%BF%90%E8%A1%8C"><span class="toc-number">4.5.</span> <span class="toc-text">4.5 编译运行</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%B0%B8%E8%BF%9C%E7%9A%84HelloWord"><span class="toc-number">5.</span> <span class="toc-text">五、永远的HelloWord</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E8%B0%88%E8%B0%88%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">6.</span> <span class="toc-text">六、谈谈架构设计</span></a></li></ol>
-      </div>
-    
-
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&text=XXL-JOB 分布式调度"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&is_video=false&description=XXL-JOB 分布式调度"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=XXL-JOB 分布式调度&body=Check out this article: https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&name=XXL-JOB 分布式调度&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&t=XXL-JOB 分布式调度"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
-        
-          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
-        
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
-    </div>
-
-  </div>
-</div>
 
         
         <footer id="footer">
@@ -365,29 +243,6 @@
 
 
 <!-- clipboard -->
-
-  
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
-  
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
-    btn += '<i class="fa-regular fa-clone"></i>';
-    btn += '</span>';
-    // mount it!
-    $(".highlight table").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      text: function(trigger) {
-        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "复制成功！");
-      e.clearSelection();
-    })
-  })
-  </script>
 
 
 <script src="/js/main.js"></script>
