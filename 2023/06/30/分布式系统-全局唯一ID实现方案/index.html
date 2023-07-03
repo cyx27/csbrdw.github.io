@@ -13,13 +13,13 @@
 <meta property="og:site_name" content="csbrdw">
 <meta property="og:description" content="UUIDUUID （Universally Unique Identifier），通用唯一识别码的缩写。UUID是由一组32位数的16进制数字所构成，所以UUID理论上的总数为 16^32&#x3D;2^128，约等于 3.4 x 10^38。也就是说若每纳秒产生1兆个UUID，要花100亿年才会将所有UUID用完。 生成的UUID是由 8-4-4-4-12格式的数据组成，其中32个字符和4个连字符’ -">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="c:\Users\16430\AppData\Roaming\Typora\typora-user-images\image-20230630221935442.png">
-<meta property="og:image" content="c:\Users\16430\AppData\Roaming\Typora\typora-user-images\image-20230630221944230.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/cyx27/image/main/image-20230630221935442.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/cyx27/image/main/image-20230630221944230.png">
 <meta property="article:published_time" content="2023-06-30T14:11:39.000Z">
-<meta property="article:modified_time" content="2023-06-30T14:19:50.310Z">
+<meta property="article:modified_time" content="2023-06-30T15:36:01.258Z">
 <meta property="article:author" content="csbrdw">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="c:\Users\16430\AppData\Roaming\Typora\typora-user-images\image-20230630221935442.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/cyx27/image/main/image-20230630221935442.png">
     
     
       
@@ -181,7 +181,7 @@
 <li><code>auto_increment_increment</code>：表示自增长字段每次递增的量，其默认值是1，取值范围是1 .. 65535。</li>
 </ul>
 <p>假设有三台机器，则DB1中order表的起始ID值为1，DB2中order表的起始值为2，DB3中order表的起始值为3，它们自增的步长都为3，则它们的ID生成范围如下图所示：</p>
-<p><img src="C:\Users\16430\AppData\Roaming\Typora\typora-user-images\image-20230630221935442.png" alt="image-20230630221935442"></p>
+<p><img src="https://raw.githubusercontent.com/cyx27/image/main/image-20230630221935442.png" alt="image-20230630221935442"></p>
 <p>通过这种方式明显的优势就是依赖于数据库自身不需要其他资源，并且ID号单调自增，可以实现一些对ID有特殊要求的业务。</p>
 <p>但是缺点也很明显，首先它<strong>强依赖DB</strong>，当DB异常时整个系统不可用。虽然配置主从复制可以尽可能的增加可用性，但是<strong>数据一致性在特殊情况下难以保证</strong>。主从切换时的不一致可能会导致重复发号。还有就是<strong>ID发号性能瓶颈限制在单台MySQL的读写性能</strong>。</p>
 <h2 id="使用redis实现"><a href="#使用redis实现" class="headerlink" title="使用redis实现"></a>使用redis实现</h2><p>Redis实现分布式唯一ID主要是通过提供像 <code>INCR</code> 和 <code>INCRBY</code> 这样的自增原子命令，由于Redis自身的单线程的特点所以能保证生成的 ID 肯定是唯一有序的。</p>
@@ -197,7 +197,7 @@
 <li><strong>最后12-bit位</strong>是自增序列，可表示2^12 &#x3D; 4096个数。</li>
 </ul>
 <p>这样的划分之后相当于<strong>在一毫秒一个数据中心的一台机器上可产生4096个有序的不重复的ID</strong>。但是我们 IDC 和机器数肯定不止一个，所以毫秒内能生成的有序ID数是翻倍的。</p>
-<p><img src="C:\Users\16430\AppData\Roaming\Typora\typora-user-images\image-20230630221944230.png" alt="image-20230630221944230"></p>
+<p><img src="https://raw.githubusercontent.com/cyx27/image/main/image-20230630221944230.png" alt="image-20230630221944230"></p>
 <p><strong>雪花算法提供了一个很好的设计思想，雪花算法生成的ID是趋势递增，不依赖数据库等第三方系统，以服务的方式部署，稳定性更高，生成ID的性能也是非常高的，而且可以根据自身业务特性分配bit位，非常灵活</strong>。</p>
 <p>但是雪花算法强<strong>依赖机器时钟</strong>，如果机器上时钟回拨，会导致发号重复或者服务会处于不可用状态。如果恰巧回退前生成过一些ID，而时间回退后，生成的ID就有可能重复。官方对于此并没有给出解决方案，而是简单的抛错处理，这样会造成在时间被追回之前的这段时间服务不可用。</p>
 <p>很多其他类雪花算法也是在此思想上的设计然后改进规避它的缺陷，后面介绍的<code>百度 UidGenerator</code> 和 <code>美团分布式ID生成系统 Leaf</code> 中snowflake模式都是在 snowflake 的基础上演进出来的。</p>
