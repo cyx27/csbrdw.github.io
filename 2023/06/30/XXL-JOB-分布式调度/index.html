@@ -9,7 +9,7 @@
     <meta name="description" content="一、概述在平时的业务场景中，经常有一些场景需要使用定时任务，比如：  时间驱动的场景：某个时间点发送优惠券，发送短信等等。 批量处理数据：批量统计上个月的账单，统计上个月销售数据等等。 固定频率的场景：每隔5分钟需要执行一次。  所以定时任务在平时开发中并不少见，而且对于现在快速消费的时代，每天都需要发送各种推送，消息都需要依赖定时任务去完成，应用非常广泛。 二、为什么需要任务调度平台在Java中">
 <meta property="og:type" content="article">
 <meta property="og:title" content="XXL-JOB 分布式调度">
-<meta property="og:url" content="http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/index.html">
+<meta property="og:url" content="https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/index.html">
 <meta property="og:site_name" content="csbrdw">
 <meta property="og:description" content="一、概述在平时的业务场景中，经常有一些场景需要使用定时任务，比如：  时间驱动的场景：某个时间点发送优惠券，发送短信等等。 批量处理数据：批量统计上个月的账单，统计上个月销售数据等等。 固定频率的场景：每隔5分钟需要执行一次。  所以定时任务在平时开发中并不少见，而且对于现在快速消费的时代，每天都需要发送各种推送，消息都需要依赖定时任务去完成，应用非常广泛。 二、为什么需要任务调度平台在Java中">
 <meta property="og:locale" content="zh_CN">
@@ -119,17 +119,17 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&text=XXL-JOB 分布式调度"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&is_video=false&description=XXL-JOB 分布式调度"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=XXL-JOB 分布式调度&body=Check out this article: http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&name=XXL-JOB 分布式调度&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&t=XXL-JOB 分布式调度"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&text=XXL-JOB 分布式调度"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&is_video=false&description=XXL-JOB 分布式调度"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=XXL-JOB 分布式调度&body=Check out this article: https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&name=XXL-JOB 分布式调度&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&t=XXL-JOB 分布式调度"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -284,17 +284,17 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&text=XXL-JOB 分布式调度"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&is_video=false&description=XXL-JOB 分布式调度"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=XXL-JOB 分布式调度&body=Check out this article: http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&name=XXL-JOB 分布式调度&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&t=XXL-JOB 分布式调度"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&text=XXL-JOB 分布式调度"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&is_video=false&description=XXL-JOB 分布式调度"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=XXL-JOB 分布式调度&body=Check out this article: https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&title=XXL-JOB 分布式调度"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&name=XXL-JOB 分布式调度&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://csbrdw.love/2023/06/30/XXL-JOB-%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/&t=XXL-JOB 分布式调度"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
