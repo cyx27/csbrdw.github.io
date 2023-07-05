@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>commit 规范</title>
+      <link href="/2023/07/05/commit-%E8%A7%84%E8%8C%83/"/>
+      <url>/2023/07/05/commit-%E8%A7%84%E8%8C%83/</url>
+      
+        <content type="html"><![CDATA[<h1 id="commit-message格式"><a href="#commit-message格式" class="headerlink" title="commit message格式"></a>commit message格式</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;type&gt;(&lt;scope&gt;): &lt;subject&gt;</span><br></pre></td></tr></table></figure><p><strong>type(必须)</strong></p><p>用于说明git commit的类别，只允许使用下面的标识。</p><p>feat：新功能（feature）。</p><p>fix&#x2F;to：修复bug，可以是QA发现的BUG，也可以是研发自己发现的BUG。</p><ul><li>fix：产生diff并自动修复此问题。适合于一次提交直接修复问题</li><li>to：只产生diff不自动修复此问题。适合于多次提交。最终修复问题提交时使用fix</li></ul><p>docs：文档（documentation）。</p><p>style：格式（不影响代码运行的变动）。</p><p>refactor：重构（即不是新增功能，也不是修改bug的代码变动）。</p><p>perf：优化相关，比如提升性能、体验。</p><p>test：增加测试。</p><p>chore：构建过程或辅助工具的变动。</p><p>revert：回滚到上一个版本。</p><p>merge：代码合并。</p><p>sync：同步主线或分支的Bug。</p><p><strong>scope(可选)</strong></p><p>scope用于说明 commit 影响的范围，比如数据层、控制层、视图层等等，视项目不同而不同。</p><p>例如在Angular，可以是location，browser，compile，compile，rootScope， ngHref，ngClick，ngView等。如果你的修改影响了不止一个scope，你可以使用*代替。</p><p><strong>subject(必须)</strong></p><p>subject是commit目的的简短描述，不超过50个字符。</p><p>建议使用中文（感觉中国人用中文描述问题能更清楚一些）。</p><ul><li>结尾不加句号或其他标点符号。</li><li>根据以上规范git commit message将是如下的格式：</li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">fix(DAO):用户查询缺少username属性 </span><br><span class="line">feat(Controller):用户查询接口开发</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> learning </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>集合</title>
       <link href="/2023/07/03/%E9%9B%86%E5%90%88/"/>
       <url>/2023/07/03/%E9%9B%86%E5%90%88/</url>
