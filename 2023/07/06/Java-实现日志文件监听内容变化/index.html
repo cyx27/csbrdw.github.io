@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="背景实现监听日志文件并读取数据变化。 Apache Commons-IO首先需要添加对应依赖： 12345&lt;dependency&gt; &lt;groupId&gt;commons-io&lt;&#x2F;groupId&gt; &lt;artifactId&gt;commons-io&lt;&#x2F;artifactId&gt; &lt;version&gt;2.7&lt;&#x2F;version&gt;&lt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 实现日志文件监听内容变化">
+<meta property="og:url" content="https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/index.html">
+<meta property="og:site_name" content="csbrdw">
+<meta property="og:description" content="背景实现监听日志文件并读取数据变化。 Apache Commons-IO首先需要添加对应依赖： 12345&lt;dependency&gt; &lt;groupId&gt;commons-io&lt;&#x2F;groupId&gt; &lt;artifactId&gt;commons-io&lt;&#x2F;artifactId&gt; &lt;version&gt;2.7&lt;&#x2F;version&gt;&lt;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-7b64f19c7adf958b35693ecacf48078b_720w.webp">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-20216671e6b28f778827e9a8b62cf89f_720w.webp">
+<meta property="article:published_time" content="2023-07-06T14:36:49.000Z">
+<meta property="article:modified_time" content="2023-07-06T14:37:57.900Z">
+<meta property="article:author" content="csbrdw">
+<meta property="article:tag" content="learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic4.zhimg.com/80/v2-7b64f19c7adf958b35693ecacf48078b_720w.webp">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Java 实现日志文件监听内容变化</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/cyx27">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2023/07/06/%E4%BD%BF%E7%94%A8curl%E4%BC%A0%E5%B5%8C%E5%A5%97json%E5%8F%82%E6%95%B0%E6%97%B6%E8%B8%A9%E7%9A%84%E5%9D%91/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/&text=Java 实现日志文件监听内容变化"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/&title=Java 实现日志文件监听内容变化"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/&is_video=false&description=Java 实现日志文件监听内容变化"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java 实现日志文件监听内容变化&body=Check out this article: https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/&title=Java 实现日志文件监听内容变化"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/&title=Java 实现日志文件监听内容变化"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/&title=Java 实现日志文件监听内容变化"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/&title=Java 实现日志文件监听内容变化"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/&name=Java 实现日志文件监听内容变化&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/&t=Java 实现日志文件监听内容变化"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Apache-Commons-IO"><span class="toc-number">2.</span> <span class="toc-text">Apache Commons-IO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86"><span class="toc-number">3.</span> <span class="toc-text">核心知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.</span> <span class="toc-text">代码实现</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Java 实现日志文件监听内容变化
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">csbrdw</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-07-06T14:36:49.000Z" class="dt-published" itemprop="datePublished">2023-07-06</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/learning/" rel="tag">learning</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>实现监听日志文件并读取数据变化。</p>
+<h2 id="Apache-Commons-IO"><a href="#Apache-Commons-IO" class="headerlink" title="Apache Commons-IO"></a><strong>Apache Commons-IO</strong></h2><p>首先需要添加对应依赖：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line"> &lt;groupId&gt;commons-io&lt;/groupId&gt;</span><br><span class="line"> &lt;artifactId&gt;commons-io&lt;/artifactId&gt;</span><br><span class="line"> &lt;version&gt;2.7&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>版本可自行选择，这里需要注意的是 2.7 版本及以上需要 Java 8</strong></p>
+<p>官网截图：</p>
+<p><img src="https://pic4.zhimg.com/80/v2-7b64f19c7adf958b35693ecacf48078b_720w.webp" alt="img"></p>
+<p>Apache Commos IO中的 <code>org.apache.commons.io.monitor</code>包提供了文件系统监听的功能。</p>
+<p><img src="https://pic4.zhimg.com/80/v2-20216671e6b28f778827e9a8b62cf89f_720w.webp" alt="img"></p>
+<h2 id="核心知识"><a href="#核心知识" class="headerlink" title="核心知识"></a><strong>核心知识</strong></h2><ul>
+<li>一句话总结：通过观察者模式以及事件监听机制，以 <code>FileAlterationObserver</code> 为核心，再通过 <code>FileAlterationListener</code>，<code>FileAlterationMonitor</code>，就可以实现对文件系统的事件监听。</li>
+<li>整体流程：</li>
+</ul>
+<ol>
+<li>自定义文件监听类并继承 <code>FileAlterationListenerAdaptor</code> 实现对文件与目录的创建，修改，删除事件的处理</li>
+<li>自定义文件监控类，通过指定目录创建一个观察者 <code>FileAlterationObserver</code></li>
+<li>向此监视器添加文件系统观察器，并添加文件监听器</li>
+<li>通过 <code>ApplicationRunner</code> 或者 <code>CommandLineRunner</code> 调用并执行</li>
+<li>通过 <code>RandomAccessFile</code> 获得文件的变化</li>
+</ol>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a><strong>代码实现</strong></h2><ul>
+<li>文件监听类：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 文件监听类</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileListener</span> <span class="keyword">extends</span> <span class="title class_">FileAlterationListenerAdaptor</span> &#123;</span><br><span class="line">    <span class="comment">//设置变量 记录上次读取位置</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> <span class="variable">num</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> RandomAccessFile randomAccessFile;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onFileChange</span><span class="params">(File file)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//将文件定位到偏移量所指位置，在该位置发生下一个读取或写入操作</span></span><br><span class="line">            randomAccessFile.seek(num);</span><br><span class="line">            <span class="comment">//获取按行读取的数据并落库</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> randomAccessFile.readLine();</span><br><span class="line">            <span class="keyword">for</span> (; str != <span class="literal">null</span>; str = randomAccessFile.readLine()) &#123;</span><br><span class="line">                <span class="comment">// handle str</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//重新计算偏移量，做下一次读取时的初始偏移量</span></span><br><span class="line">            num = randomAccessFile.length();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>文件监控类：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 文件监听测试</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileMonitor</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">FileAlterationMonitor</span> <span class="variable">monitor</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">FileMonitor</span><span class="params">(<span class="type">long</span> interval)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        monitor = <span class="keyword">new</span> <span class="title class_">FileAlterationMonitor</span>(interval);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 给文件添加监听</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> path</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> listener</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">monitor</span><span class="params">(String path, FileAlterationListener listener)</span> &#123;</span><br><span class="line">        <span class="type">FileAlterationObserver</span> <span class="variable">observer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileAlterationObserver</span>(<span class="keyword">new</span> <span class="title class_">File</span>(path));</span><br><span class="line">        monitor.addObserver(observer);</span><br><span class="line">        observer.addListener(listener);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">stop</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        monitor.stop();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">start</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        monitor.start();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>自定义 Runner 并实现 <code>CommandLineRunner</code> :</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 项目启动之后开启文件监听功能</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DirtyRecordRunner</span> <span class="keyword">implements</span> <span class="title class_">CommandLineRunner</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(DirtyRecordRunner.class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String path;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">(String... args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        logger.info(<span class="built_in">this</span>.getClass().getName()+<span class="string">&quot;[开启文件夹监听功能]&quot;</span>);</span><br><span class="line">        <span class="type">FileMonitor</span> <span class="variable">fileMonitor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileMonitor</span>(<span class="number">1000</span>);</span><br><span class="line">        fileMonitor.monitor(path,<span class="keyword">new</span> <span class="title class_">FileListener</span>());</span><br><span class="line">        fileMonitor.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/cyx27">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Apache-Commons-IO"><span class="toc-number">2.</span> <span class="toc-text">Apache Commons-IO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86"><span class="toc-number">3.</span> <span class="toc-text">核心知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.</span> <span class="toc-text">代码实现</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/&text=Java 实现日志文件监听内容变化"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/&title=Java 实现日志文件监听内容变化"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/&is_video=false&description=Java 实现日志文件监听内容变化"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java 实现日志文件监听内容变化&body=Check out this article: https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/&title=Java 实现日志文件监听内容变化"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/&title=Java 实现日志文件监听内容变化"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/&title=Java 实现日志文件监听内容变化"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/&title=Java 实现日志文件监听内容变化"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/&name=Java 实现日志文件监听内容变化&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://csbrdw.love/2023/07/06/Java-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC%E5%86%85%E5%AE%B9%E5%8F%98%E5%8C%96/&t=Java 实现日志文件监听内容变化"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2023
+    csbrdw
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/cyx27">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
